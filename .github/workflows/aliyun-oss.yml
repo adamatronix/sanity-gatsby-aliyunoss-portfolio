@@ -20,5 +20,5 @@ jobs:
           secure: true
           # deploy config
           entry: public/**/* # glob pattern
-          remote-dir: /web/public
+          remote-dir: /public
           path-rewrite: ^public/
