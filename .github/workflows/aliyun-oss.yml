@@ -1,5 +1,10 @@
 name: AliyunOSS
 on: [push]
+env:
+  BUCKET: ${{ secrets.BUCKET }}
+  ENDPOINT: oss-cn-hongkong.aliyuncs.com
+  ACCESS_KEY: ${{ secrets.ACCESS_KEY_ID }}
+  ACCESS_KEY_SECRET: ${{ secrets.ACCESS_KEY_SECRET }}
 jobs:
   Release:
     name: Release
@@ -9,16 +14,9 @@ jobs:
       - name: Build Project
         run: npm install && npm run build
         working-directory: web
-      - name: Deploy OSS
-        uses: taixw2/deploy-aliyun-oss@1197d9e4fb05fa081028e33a7e70d0bc07cf97f6
-        with:
-          # aliyun config
-          region: oss-cn-hongkong.aliyuncs.com
-          access-key-id: ${{ secrets.ACCESS_KEY_ID }}
-          access-key-secret: ${{ secrets.ACCESS_KEY_SECRET }}
-          bucket: ${{ secrets.BUCKET }}
-          secure: true
-          # deploy config
-          entry: public/**/* # glob pattern
-          remote-dir: /public
-          path-rewrite: ^public/
+      - name: Install Alibaba Cloud OSSUTIL
+        run: wget http://gosspublic.alicdn.com/ossutil/1.6.10/ossutil64 && chmod +x ossutil64
+      - name: Configure Alibaba Cloud OSSUTIL
+        run: ./ossutil64 config -i ${ACCESS_KEY} -k ${ACCESS_KEY_SECRET} -e ${ENDPOINT} -c .ossutilconfig
+      - name: Upload the web folder to the chosen OSS bucket
+        run: ./ossutil64 --config-file .ossutilconfig cp ${{ github.workspace }}/web/public oss://${BUCKET} -r -f
