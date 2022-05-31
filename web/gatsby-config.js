@@ -13,6 +13,9 @@ module.exports = {
     'gatsby-plugin-postcss',
     'gatsby-plugin-image',
     'gatsby-plugin-react-helmet',
+    'gatsby-plugin-sharp', 
+    'gatsby-transformer-sharp',
+    'gatsby-source-sanity-transform-images',
     {
       resolve: 'gatsby-source-sanity',
       options: {

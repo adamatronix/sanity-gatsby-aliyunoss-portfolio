@@ -44,6 +44,11 @@ export const query = graphql`
               width
             }
             asset {
+              localFile {
+                childImageSharp {
+                  gatsbyImageData
+                }
+              }
               _id
             }
             alt
